@@ -1,0 +1,54 @@
+Top agent users
+SELECT
+
+httprequest.headers[1].value AS User_Agent,
+
+COUNT(*) AS Request_Count
+
+FROM waf_logs_2023_11
+
+WHERE action = ‘BLOCK’
+
+GROUP BY httprequest.headers[1].value
+
+ORDER BY Request_Count DESC
+
+LIMIT 10;
+
+2. Top Blocked Rules
+
+SELECT
+
+*
+
+FROM waf_logs_2023
+
+WHERE action = ‘BLOCK’
+
+LIMIT ALL;
+
+3. Top 10 IPs blocked
+
+SELECT
+
+to_iso8601(from_unixtime(timestamp / 1000)) AS time_ISO_8601,
+
+httprequest.clientip AS Client_IP,
+
+httprequest.country AS Country,
+
+terminatingruleid AS WAF_Rule_ID,
+
+terminatingrulematchdetails AS Match_Details,
+
+httprequest.uri AS URI,
+
+httprequest.httpmethod AS request_method,
+
+labels AS Blocked_Rule
+
+FROM waf_logs_2023_09_29
+
+WHERE action = ‘BLOCK’
+
+LIMIT all;
